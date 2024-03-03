@@ -40,6 +40,9 @@
 (defvar flymake-cspell-cspell-command "cspell"
   "Name of the cspell command to execute.")
 
+(defvar flymake-cspell-diagnostic-type :warning
+  "Flymake diagnostic type for cspell errors.")
+
 (defvar flymake-cspell--cspell-version nil
   "Version of cspell found on the system.
 Retrieved and cached when flymake-cspell is first set up for a buffer.")
@@ -135,7 +138,7 @@ Reset the variable or re-open the buffer's file to retry.")
         (cl-loop
          for (line column word suggestions) in errors
          for (beg . end) = (flymake-cspell--find-diag-boundaries line column word)
-         collect (flymake-make-diagnostic buffer beg end :warning (flymake-cspell--format-diag word suggestions)))))))
+         collect (flymake-make-diagnostic buffer beg end flymake-cspell-diagnostic-type (flymake-cspell--format-diag word suggestions)))))))
 
 (defun flymake-cspell--find-diag-boundaries (line column word)
   "Find beginning and end of WORD at LINE, COLUMN in current buffer."
